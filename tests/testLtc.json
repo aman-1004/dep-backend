@@ -1,0 +1,34 @@
+{
+    "name": "Da Ku",
+    "designation": "ass porff",
+    "date": "2023-04-01",
+    "paylevel": "8",
+    "earnedLeave": "0",
+    "fromDate": "2023-04-23",
+    "toDate": "2023-04-26",
+    "prefixFrom": "",
+    "prefixTo": "",
+    "suffixFrom": "",
+    "suffixTo": "",
+    "spouseEntitled": "on",
+    "homeTown": "Mandi",
+    "visitNature": "Hometown",
+    "estimatedFare": "Mandi",
+    "advanceRequired": "20000",
+    "encashment": "",
+    "encashmentDays": "",
+    "certification": "",
+    "peopleInvolved": [
+        {
+            "name": "other fellow",
+            "age": "99",
+            "relation": "fellow",
+            "from": "ropar ",
+            "to": "mandi",
+            "back": "YES",
+            "mode_of_travel": "flight"
+        }
+    ],
+    "stageCurrent": 1,
+    "stageRedirect": null
+}
