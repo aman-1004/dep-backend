@@ -70,6 +70,3 @@ def submitRegistrarData():
     return submitHodData()
 
 
-@router.route('/submitRegistrarData')
-def submitRegistrarData():
-    pass
