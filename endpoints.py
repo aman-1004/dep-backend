@@ -8,12 +8,7 @@ from typing import List
 router = Blueprint("endpoints", __name__ )
 router.register_blueprint(nonApplicantRouter)
 
-# @router.route("/listLiveLTCApplications")
-# def listLiveApplications():
-#     userInfo = session.get("userInfo")
-#     ltcs:List[LTCInfo] = userInfo.ltcInfos
-#     filter(l)
-
+#need checking
 @router.route('/createNewLTCApplications', methods=['POST'])
 def createNewLTCApplicationHandle():
     ltcInfo = request.json
@@ -23,18 +18,20 @@ def createNewLTCApplicationHandle():
     return "Done", 401
 
 
+#working fine
 @router.route('/listLiveLTCApplications', methods=['POST', 'GET'])
 def listLiveLTCApplicationHandle():
     userInfo = session.get('userInfo')
     ltcInfos = [ltc.json() for ltc in listLiveApplications(userInfo)]
     return ltcInfos
 
+#working fine
 @router.route('/getLTCInfo', methods=['POST'])
 def getLTCInfo():
     ltcId = request.json.get('ltcId')
     ltcInfo = LTCInfo.query.filter_by(id=ltcId).first()
     print(ltcInfo.json())
-    return ltcInfo.json(), 401 
+    return ltcInfo.json(), 200 
 
 @router.route('/addCommentLTCForm')
 def addCommentLTCForm():
@@ -42,3 +39,4 @@ def addCommentLTCForm():
     ltcFormId = request.form.get('ltcFormId')
     ltcInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
     ltcInfo.comments.append(comment)
+

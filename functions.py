@@ -1,4 +1,4 @@
-from models import User, LTCInfo
+from models import User, LTCInfo, db
 
 
 def checkEmail(emailId):
@@ -8,11 +8,13 @@ def checkEmail(emailId):
 def createNewLTCApplication(userInfo, formInfo):
     formInfo['userId'] = userInfo.id
     info = LTCInfo(formInfo)
+    db.session.add(info)
+    db.session.commit()
     print("JSON LTCINFO", info.json())
     pass
 
 def listLiveApplications(userInfo):
-    liveLtc = filter(lambda ltc: ltc.stageCurrent != 1, User.query.filter(User.id==1).first().ltcInfos)
+    liveLtc = filter(lambda ltc: ltc.stageCurrent != 1, User.query.filter(User.id==userInfo.id).first().ltcInfos)
     return list(liveLtc)
 
 def sectionForward(ltcInfo, stage):

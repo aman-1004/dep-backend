@@ -45,8 +45,15 @@ def getUserInfo():
                 "dateOfJoining": userInfo.dateOfJoining,
                 "department": userInfo.department,
                 "isApplicant": True if userInfo.roleId == 0 else False,
+                "roleId": userInfo.roleId,
+                "designation": userInfo.role.designation,
+                "role": userInfo.role.json(),
                 }, 200
     
     return {}, 401
 
 
+@protected_router.route('/logout', methods=['POST'])
+def logOut():
+    session.pop('userInfo')
+    return "", 200

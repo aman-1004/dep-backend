@@ -14,9 +14,6 @@ from app import app
 
 def main():
     with app.app_context():
-        id=1
-        user = User.query.filter(User.id==id).first()
-        roles = Role.query.all()
-        print(roles)
+        print(User.query.filter(User.firstName=='Aman').first().ltcInfos)
 
 main()

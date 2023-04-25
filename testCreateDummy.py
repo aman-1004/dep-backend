@@ -1,5 +1,5 @@
 from models import User, Role, LTCInfo, PersonInvolvedLTC, Comment, db
-from tests.user1 import user1,users
+from tests.user1 import user1,users,hods
 from tests.ltcinfo1 import ltcInfos
 from tests.testRole import role1
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +8,8 @@ import json
 from app import app
 
 def createDummyDataUser():
-    for user in users:
+    ppl = hods 
+    for user in ppl:
         db.session.add(newUser(user))
 
 def createDummyLTCInfo():
@@ -36,22 +37,24 @@ def newLTC(ltc):
 
 def createNewRole():
     json = {
-        "id": 0,
-        "designation": "Assistant Professor",
+        "id": 1,
+        "designation": "HOD",
         "payLevel": 8,
-        "stageCurrent": 0,
-        "nextStage": 1,
-        "prevStage": None
+        "stageCurrent": 1,
+        "nextStage": 2,
+        "prevStage": 0 
     }
 
-    return newRole(json)
+    db.session.add(newRole(json))
+    db.session.commit()
 
 
 
 def main():
     db.create_all()
-    db.session.add(createNewRole())
-    db.session.commit()
+    
+    print(User.query.filter(User.roleId!=0).first().role)
+
 
 with app.app_context():
     main()

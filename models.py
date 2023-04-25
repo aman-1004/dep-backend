@@ -236,7 +236,7 @@ class Comment(db.Model):
     comment: Mapped[str]
     stage: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(default=func.now())
-
+    
     def __repr__(self):
         return f"Comment('{self.comment}' set by stage-{self.stage} user)"
 

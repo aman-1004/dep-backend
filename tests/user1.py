@@ -154,3 +154,16 @@ users = [
             },
         "isApplicant": True
         }]
+
+hods = [
+        {
+        "firstName": "Civil",
+        "lastName": "HOD",
+        "emailId": "hod@dep.in",
+        "hometown": "dehram",
+        "dateOfJoining": "2021-06-01",
+        "department": "civil",
+        "roleId": 1,
+        "isApplicant": True
+    }
+]
