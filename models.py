@@ -90,10 +90,10 @@ class Role(db.Model):
     payLevel: Mapped[int]
     stageCurrent: Mapped[str]
     nextStage: Mapped[str]
-    prevStage: Mapped[str]
+    prevStage: Mapped[str] = mapped_column(nullable=True)
 
     def __repr__(self):
-        return "Role {id: %d, designation: %s, payLevel: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
+        return "Role {id: %s, designation: %s, payLevel: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
                 self.id,
                 self.designation,
                 self.payLevel,
@@ -156,27 +156,27 @@ class LTCInfo(db.Model):
             self.peopleInvolved.append(PersonInvolvedLTC(**person))
 
         self.userId = json['userId']
-        if json['fromDate'] is not None:
+        if json['fromDate'] != '':
             self.fromDate = datetime.strptime(json['fromDate'], '%Y-%m-%d')
         else:
             self.fromDate = None
-        if json['toDate'] is not None:
+        if json['toDate'] != '':
             self.toDate = datetime.strptime(json['toDate'], '%Y-%m-%d')
         else:
             self.toDate = None
-        if json['prefixFrom'] is not None:
+        if json['prefixFrom'] != '':
             self.prefixFrom = datetime.strptime(json['prefixFrom'], '%Y-%m-%d')
         else:
             self.prefixFrom = None
-        if json['prefixTo'] is not None:
+        if json['prefixTo'] != '':
             self.prefixTo = datetime.strptime(json['prefixTo'], '%Y-%m-%d')
         else:
             self.prefixTo = None
-        if json['suffixFrom'] is not None:
+        if json['suffixFrom'] != '':
             self.suffixFrom = datetime.strptime(json['suffixFrom'], '%Y-%m-%d')
         else:
             self.suffixFrom = None
-        if json['suffixTo'] is not None:
+        if json['suffixTo'] != '':
             self.suffixTo = datetime.strptime(json['suffixTo'], '%Y-%m-%d')
         else:
             self.suffixTo = None
@@ -200,8 +200,9 @@ class LTCInfo(db.Model):
                 )
     
     def json(self):
-        return {
+         return {
                 "id": self.id,
+                "user": self.user.json(),
                 "userId": self.userId,
                 "fromDate": self.fromDate,
                 "toDate": self.toDate,

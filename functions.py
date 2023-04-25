@@ -5,15 +5,15 @@ def checkEmail(emailId):
     foundUser = User.query.filter(User.emailId == emailId).first()
     return foundUser
 
-
 def createNewLTCApplication(userInfo, formInfo):
     formInfo['userId'] = userInfo.id
-    # print(userInfo)
-    # print(formInfo)
     info = LTCInfo(formInfo)
-    print(info.json())
+    print("JSON LTCINFO", info.json())
     pass
 
+def listLiveApplications(userInfo):
+    liveLtc = filter(lambda ltc: ltc.stageCurrent != 1, User.query.filter(User.id==1).first().ltcInfos)
+    return list(liveLtc)
 
 def sectionForward(ltcInfo, stage):
     ltcInfo.stageCurrent = stage
@@ -28,5 +28,4 @@ def sectionReject(ltcInfo):
 def sectionReview(ltcInfo, stageRedirect):
     ltcInfo.stageCurrent = 0
     ltcInfo.stageRedirect = stageRedirect
-
 
