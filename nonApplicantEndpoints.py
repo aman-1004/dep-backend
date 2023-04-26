@@ -1,6 +1,6 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication
-from models import LTCInfo, Comment, User
+from models import LTCInfo, Comment, User, db
 from datetime import datetime
 
 router =  Blueprint("nonApplicantEndpoints", __name__)
@@ -25,26 +25,31 @@ def listPendingLTCApplication():
     return getPendingByStage(handlerInfo.role.stageCurrent)
 
 
-def addCommentLTCForm(comment: str, ltcInfo: LTCInfo):
+def addCommentLTCForm(comment: str, ltcInfo: LTCInfo, handlerId):
     ltcInfo.comments.append(Comment(**{"comment": comment, 
-                                       "stage": ltcInfo.stageCurrent, 
+                                       "handlerId": handlerId, 
                                        "created_at": datetime.now()}))
 
 
-@router.route('/submitHodData')
+@router.route('/submitHodData', methods=["POST"])
 def submitHodData():
     handlerInfo: User = session.get('userInfo')
-    comment: str = request.form.get('comment')
-    status: str = request.form.get('status')
-    ltcFormId: int = request.form.get('formId')
+    # print(request.json)
+    comment: str = request.json.get('comment')
+    status: str = request.json.get('status')
+    ltcFormId: int = request.json.get('formId')
     ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
-    addCommentLTCForm(comment, ltcInfo)
+    addCommentLTCForm(comment, ltcInfo, handlerId=handlerInfo.id)
     if(status == 'ACCEPT'):
         ltcInfo.stageCurrent = handlerInfo.role.nextStage
     else:    
         ltcInfo.stageCurrent = handlerInfo.role.prevStage
+    
+    # print([comment.json() for comment in ltcInfo.comments])
+    # # print(ltcInfo.json())
+    db.session.commit()
 
-    return "200"
+    return "200", 200 
 
 @router.route('/submitEstabData')
 def submitEstabData():
@@ -70,3 +75,12 @@ def submitRegistrarData():
     return submitHodData()
 
 
+@router.route('/getComments', methods=['POST'])
+def getComments():
+    ltcFormId = request.json.get('ltcId')
+    # print('ltcId', ltcId)
+    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
+    ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
+    
+    return [comment.json() for comment in ltcInfo.comments]
+    # return {}

@@ -15,7 +15,10 @@ from app import app
 def main():
     with app.app_context():
     #     print(User.query.filter(User.firstName=='Aman').first().ltcInfos)
-        deleteLtcForms()
+        for comment in Comment.query.all():
+            # db.session.delete(comment)
+            print(comment.json())
+        # db.session.commit()
 
 
 def deleteLtcForms():
@@ -25,5 +28,9 @@ def deleteLtcForms():
 
     print([ltc.json() for ltc in LTCInfo.query.all()])
 
+def deleteComment():
+    db.session.delete(Comment.query.filter(Comment.id==1).first())
+    db.session.commit()
 
-main()
+with app.app_context():
+    main()

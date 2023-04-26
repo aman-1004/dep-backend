@@ -52,8 +52,8 @@ def createNewRole():
 
 def main():
     db.create_all()
-    
-    print(User.query.filter(User.roleId!=0).first().role)
+    createNewRole() 
+    # print(User.query.filter(User.roleId!=0).first().role)
 
 
 with app.app_context():

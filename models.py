@@ -234,7 +234,8 @@ class Comment(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     ltcId: Mapped[int] = mapped_column(ForeignKey(('ltc_infos.id')))
     comment: Mapped[str]
-    stage: Mapped[int]
+    handlerId: Mapped[int] = mapped_column(ForeignKey(('users.id')))
+    handler: Mapped["User"] = relationship(backref="issued_comments")
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     
     def __repr__(self):
@@ -245,7 +246,7 @@ class Comment(db.Model):
                 "id": self.id,
                 "ltcId": self.ltcId,
                 "comment": self.comment,
-                "stage": self.stage,
+                "handler": self.handler.json(),
                 "created_at": self.created_at,
                 }
 
