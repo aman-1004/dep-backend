@@ -15,7 +15,7 @@ def createNewLTCApplicationHandle():
     userInfo = session.get('userInfo')
     print(userInfo)
     createNewLTCApplication(userInfo, ltcInfo)
-    return "Done", 401
+    return "Done", 200 
 
 
 #working fine
@@ -33,10 +33,4 @@ def getLTCInfo():
     print(ltcInfo.json())
     return ltcInfo.json(), 200 
 
-@router.route('/addCommentLTCForm')
-def addCommentLTCForm():
-    comment = request.form.get('comment')
-    ltcFormId = request.form.get('ltcFormId')
-    ltcInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
-    ltcInfo.comments.append(comment)
 

@@ -29,7 +29,7 @@ class User(db.Model):
         self.dateOfJoining = datetime.strptime(json['dateOfJoining'], '%Y-%m-%d')
         self.department = json['department']
         # self.isApplicant = json['isApplicant']
-        self.roleId = json['roleId']
+        self.roleId = json['rinoleId']
         self.ltcInfos = []
 
     def __repr__(self):
@@ -185,8 +185,8 @@ class LTCInfo(db.Model):
         self.natureOfTravel = json['natureOfTravel']
         self.placeToVisit = json['placeToVisit']
         self.totalEstimatedFare = json['totalEstimatedFare']
-        self.advanceRequired = json['advanceRequired']
-        self.encashmentAvailed = json['encashmentAvailed']
+        self.advanceRequired = json['advanceRequired'] == 'on'
+        self.encashmentAvailed = json['encashmentAvailed'] == 'on'
         self.encashmentNoOfDays = json['encashmentNoOfDays']
         # self.stageRedirect = json.get('stageRedirect')
         # self.stageCurrent = json['stageCurrent']
