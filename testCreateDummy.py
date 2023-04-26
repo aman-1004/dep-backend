@@ -38,7 +38,7 @@ def newLTC(ltc):
 def createNewRole():
     json = {
         "id": 1,
-        "designation": "HOD",
+        "designation": "",
         "payLevel": 8,
         "stageCurrent": 1,
         "nextStage": 2,

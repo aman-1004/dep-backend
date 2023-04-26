@@ -15,14 +15,14 @@ def getPendingByStage(stageCurrent):
 
 @router.before_request
 def before():
-    if (isApplicant(session.get('userInfo').get('roles', {}).get('stageCurrent'))):
+    if (isApplicant(session.get('userInfo').role.stageCurrent)):
         return "You are not authorized", 401
 
 
 @router.route('/listPendingLTCApplication', methods=['POST'])
 def listPendingLTCApplication():
     handlerInfo = session.get('userInfo')
-    return getPendingByStage(handlerInfo.roles.stageCurrent)
+    return getPendingByStage(handlerInfo.role.stageCurrent)
 
 
 def addCommentLTCForm(comment: str, ltcInfo: LTCInfo):

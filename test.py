@@ -14,6 +14,16 @@ from app import app
 
 def main():
     with app.app_context():
-        print(User.query.filter(User.firstName=='Aman').first().ltcInfos)
+    #     print(User.query.filter(User.firstName=='Aman').first().ltcInfos)
+        deleteLtcForms()
+
+
+def deleteLtcForms():
+    for ltc in LTCInfo.query.all():
+        print(db.session.delete(ltc))
+    db.session.commit()
+
+    print([ltc.json() for ltc in LTCInfo.query.all()])
+
 
 main()
