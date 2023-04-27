@@ -60,3 +60,12 @@ def listLiveTAApplicationsHandle():
     taInfos = [ta.json() for ta in listLiveTAApplications(userInfo)]
     return taInfos
     pass
+
+
+@router.route('/getTAInfo', methods=['POST'])
+def getTAInfo():
+    taId = request.json.get('taId')
+    taInfo = TAInfo.query.filter_by(id=taId).first()
+    print(taInfo.json())
+    # return taInfo.json(), 200
+    return 2

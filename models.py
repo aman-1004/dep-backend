@@ -261,6 +261,10 @@ class TAInfo(db.Model):
     ltcId: Mapped[int] = mapped_column(ForeignKey('ltc_infos.id'))
     ltcInfo: Mapped["LTCInfo"] = relationship(backref="taInfo")
     journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo") 
+    comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos")
+    stageRedirect: Mapped[str] = mapped_column(nullable=True)
+    stageCurrent: Mapped[str]
+    
     # stageCurrent: Mapped[int]
 
 
@@ -268,6 +272,7 @@ class TAInfo(db.Model):
         self.userId = userId
         self.ltcId = ltcId
         self.journeyDetails = [JourneyDetail(journeyDet) for journeyDet in journeyDetails]
+        self.stageCurrent = 1
 
     def json(self):
         return {
@@ -290,7 +295,7 @@ class JourneyDetail(db.Model):
     classOfTravel: Mapped[str]
     noOfFares: Mapped[int]
     totalFare: Mapped[int]
-    ticketNo: Mapped[int]
+    ticketNo: Mapped[str]
 
     def __init__(self, json):
         super().__init__(**json)
@@ -323,3 +328,24 @@ class JourneyDetail(db.Model):
     #   totalFare:400,
     #   ticketNo:50,
     # }],
+
+class CommentTA(db.Model):
+    __tablename__ = "comments"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    taId: Mapped[int] = mapped_column(ForeignKey(('ta_infos.id')))
+    comment: Mapped[str]
+    handlerId: Mapped[int] = mapped_column(ForeignKey(('users.id')))
+    handler: Mapped["User"] = relationship(backref="issued_comments")
+    created_at: Mapped[datetime] = mapped_column(default=func.now())
+    
+    def __repr__(self):
+        return f"Comment('{self.comment}' set by stage-{self.stage} user)"
+
+    def json(self):
+        return {
+                "id": self.id,
+                "taId": self.taId,
+                "comment": self.comment,
+                "handler": self.handler.json(),
+                "created_at": self.created_at,
+                }
