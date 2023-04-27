@@ -250,3 +250,76 @@ class Comment(db.Model):
                 "created_at": self.created_at,
                 }
 
+
+
+
+class TAInfo(db.Model):
+    __tablename__ = "ta_infos"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    userId: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user: Mapped["User"] = relationship(backref="taInfos")
+    ltcId: Mapped[int] = mapped_column(ForeignKey('ltc_infos.id'))
+    ltcInfo: Mapped["LTCInfo"] = relationship(backref="taInfo")
+    journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo") 
+    # stageCurrent: Mapped[int]
+
+
+    def __init__(self, userId, ltcId, journeyDetails):
+        self.userId = userId
+        self.ltcId = ltcId
+        self.journeyDetails = [JourneyDetail(journeyDet) for journeyDet in journeyDetails]
+
+    def json(self):
+        return {
+                "id": self.id,
+                "user": self.user.json(),
+                "ltcInfo": self.ltcInfo.json(),
+                "journeyDetails": [journeyDet.json() for journeyDet in self.journeyDetails]
+                }
+
+class JourneyDetail(db.Model):
+    __tablename__ = "journey_details"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    taId: Mapped[int] = mapped_column(ForeignKey('ta_infos.id'))
+    departureDate: Mapped[datetime]
+    departureFrom: Mapped[str]
+    arrivalDate: Mapped[datetime]
+    arrivalTo: Mapped[str]
+    distance: Mapped[int]
+    modeOfTravel: Mapped[str]
+    classOfTravel: Mapped[str]
+    noOfFares: Mapped[int]
+    totalFare: Mapped[int]
+    ticketNo: Mapped[int]
+
+    def __init__(self, json):
+        super().__init__(**json)
+        self.departureDate = datetime.strptime(json['departureDate'], '%Y-%m-%d')
+        self.arrivalDate = datetime.strptime(json['arrivalDate'], '%Y-%m-%d')
+
+    def json(self):
+        return {
+                "id": self.id,
+                "departureDate": self.departureDate,
+                "departureFrom": self.departureFrom,
+                "arrivalDate": self.arrivalDate,
+                "arrivalTo": self.arrivalTo,
+                "distance": self.distance,
+                "modeOfTravel": self.modeOfTravel,
+                "classOfTravel": self.classOfTravel,
+                "noOfFares": self.noOfFares,
+                "totalFare": self.totalFare,
+                "ticketNo": self.ticketNo
+                }
+    # journeyDetails:[{
+    #   departureDate:"2023-05-11",
+    #   departureFrom:"Punjab",
+    #   arrivalDate:"2023-05-13",
+    #   arrivalTo:"Chandigarh",
+    #   distance:75,
+    #   modeOfTravel:"Bus",
+    #   classOfTravel:"A",
+    #   noOfFares:4,
+    #   totalFare:400,
+    #   ticketNo:50,
+    # }],

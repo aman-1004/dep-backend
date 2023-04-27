@@ -1,11 +1,11 @@
-from models import User, Role, LTCInfo, PersonInvolvedLTC, Comment, db
+from models import User, Role, LTCInfo, PersonInvolvedLTC, Comment, db, TAInfo
 from tests.user1 import user1,users
 from tests.ltcinfo1 import ltcInfos
 from tests.testRole import role1
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 import json
-from functions import listLiveApplications
+# from functions import listLiveApplications
 
 from app import app
 
@@ -14,12 +14,7 @@ from app import app
 
 def main():
     with app.app_context():
-    #     print(User.query.filter(User.firstName=='Aman').first().ltcInfos)
-        for comment in Comment.query.all():
-            # db.session.delete(comment)
-            print(comment.json())
-        # db.session.commit()
-
+        print([i.json() for i in TAInfo.query.all()])
 
 def deleteLtcForms():
     for ltc in LTCInfo.query.all():
@@ -33,4 +28,5 @@ def deleteComment():
     db.session.commit()
 
 with app.app_context():
+    db.create_all()
     main()

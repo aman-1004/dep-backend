@@ -38,9 +38,9 @@ def newLTC(ltc):
 def createNewRole():
     json = {
         "id": 1,
-        "designation": "",
+        "designation": "Establishment Section JA",
         "payLevel": 8,
-        "stageCurrent": 1,
+        "stageCurrent": 2,
         "nextStage": 2,
         "prevStage": 0 
     }
@@ -52,7 +52,7 @@ def createNewRole():
 
 def main():
     db.create_all()
-    createNewRole() 
+    # createNewRole() 
     # print(User.query.filter(User.roleId!=0).first().role)
 
 

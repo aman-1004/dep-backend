@@ -17,17 +17,8 @@ def listLiveApplications(userInfo):
     liveLtc = filter(lambda ltc: ltc.stageCurrent != 1, User.query.filter(User.id==userInfo.id).first().ltcInfos)
     return list(liveLtc)
 
-def sectionForward(ltcInfo, stage):
-    ltcInfo.stageCurrent = stage
-    ltcInfo.stageRedirect = None
 
-
-def sectionReject(ltcInfo):
-    ltcInfo.stageCurrent = -1  # assuming reject stage is -1. make changes if any in future
-    ltcInfo.stageRedirect = None
-
-
-def sectionReview(ltcInfo, stageRedirect):
-    ltcInfo.stageCurrent = 0
-    ltcInfo.stageRedirect = stageRedirect
-
+def listLiveTAApplications(userInfo):
+    # add Stage current here
+    liveTa = filter(lambda ta: True, User.query.filter(User.id==userInfo.id).first().taInfos)
+    return list(liveTa)

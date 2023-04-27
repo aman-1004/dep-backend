@@ -84,3 +84,5 @@ def getComments():
     
     return [comment.json() for comment in ltcInfo.comments]
     # return {}
+
+
