@@ -51,26 +51,26 @@ def submitHodData():
 
     return "200", 200 
 
-@router.route('/submitEstabData')
+@router.route('/submitEstabData', methods=['POST'])
 def submitEstabData():
     return submitHodData()
 
 
-@router.route('/submitAccountsData')
+@router.route('/submitAccountsData', methods=['POST'])
 def submitAccountsData():
     return submitHodData()
 
 
-@router.route('/submitAuditData')
+@router.route('/submitAuditData', methods=['POST'])
 def submitAuditData():
     return submitHodData()
 
 
-@router.route('/submitDeanData')
+@router.route('/submitDeanData', methods=['POST'])
 def submitDeanData():
     return submitHodData()
 
-@router.route('/submitRegistrarData')
+@router.route('/submitRegistrarData', methods=['POST'])
 def submitRegistrarData():
     return submitHodData()
 
@@ -128,26 +128,26 @@ def submitTAHodData():
     return "200", 200 
 
 
-@router.route('/submitTAEstabData')
+@router.route('/submitTAEstabData', methods=['POST'])
 def submitTAEstabData():
     return submitTAHodData()
 
 
-@router.route('/submitTAAccountsData')
+@router.route('/submitTAAccountsData', methods=['POST'])
 def submitTAAccountsData():
     return submitTAHodData()
 
 
-@router.route('/submitTAAuditData')
+@router.route('/submitTAAuditData', methods=['POST'])
 def submitTAAuditData():
     return submitTAHodData()
 
 
-@router.route('/submitTADeanData')
+@router.route('/submitTADeanData', methods=['POST'])
 def submitTADeanData():
     return submitTAHodData()
 
-@router.route('/submitTARegistrarData')
+@router.route('/submitTARegistrarData', methods=['POST'])
 def submitTARegistrarData():
     return submitTAHodData()
 
