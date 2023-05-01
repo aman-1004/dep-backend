@@ -14,6 +14,8 @@ class User(db.Model):
     lastName: Mapped[str]
     emailId: Mapped[str]
     hometown: Mapped[str]
+    designation: Mapped[str] # assitant/ associate, junior superindendent
+    payLevel: Mapped[int]
     roleId: Mapped[int] = mapped_column(ForeignKey('roles.id'))
     role: Mapped["Role"] = relationship(backref="users")
     dateOfJoining: Mapped[datetime]
@@ -28,8 +30,10 @@ class User(db.Model):
         self.hometown = json['hometown']
         self.dateOfJoining = datetime.strptime(json['dateOfJoining'], '%Y-%m-%d')
         self.department = json['department']
+        self.designation = json['designation']
+        self.payLevel = json['payLevel']
         # self.isApplicant = json['isApplicant']
-        self.roleId = json['rinoleId']
+        self.roleId = json['roleId']
         self.ltcInfos = []
 
     def __repr__(self):
@@ -52,6 +56,8 @@ class User(db.Model):
                 "department": self.department,
                 # "isApplicant": self.isApplicant,
                 "roleId": self.roleId,
+                "designation": self.designation,
+                "paylevel": self.payLevel,
                 "role": self.role.json()
                 }
 
@@ -86,8 +92,7 @@ class PersonInvolvedLTC(db.Model):
 class Role(db.Model):
     __tablename__ = "roles"
     id: Mapped[int] = mapped_column(primary_key=True)
-    designation: Mapped[str]
-    payLevel: Mapped[int]
+    roleName: Mapped[str] 
     stageCurrent: Mapped[str]
     nextStage: Mapped[str]
     prevStage: Mapped[str] = mapped_column(nullable=True)
@@ -95,8 +100,7 @@ class Role(db.Model):
     def __repr__(self):
         return "Role {id: %s, designation: %s, payLevel: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
                 self.id,
-                self.designation,
-                self.payLevel,
+                self.roleName,
                 self.stageCurrent,
                 self.nextStage,
                 self.prevStage,
@@ -105,8 +109,7 @@ class Role(db.Model):
     def json(self):
         return {
                 "id": self.id,
-                "designation": self.designation,
-                "payLevel": self.payLevel,
+                "roleName": self.roleName,
                 "stageCurrent": self.stageCurrent,
                 "nextStage": self.nextStage,
                 "prevStage": self.prevStage
@@ -330,7 +333,7 @@ class JourneyDetail(db.Model):
     # }],
 
 class CommentTA(db.Model):
-    __tablename__ = "comments"
+    __tablename__ = "ta_comments"
     id: Mapped[int] = mapped_column(primary_key=True)
     taId: Mapped[int] = mapped_column(ForeignKey(('ta_infos.id')))
     comment: Mapped[str]
@@ -349,3 +352,4 @@ class CommentTA(db.Model):
                 "handler": self.handler.json(),
                 "created_at": self.created_at,
                 }
+    

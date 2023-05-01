@@ -68,4 +68,4 @@ def getTAInfo():
     taInfo = TAInfo.query.filter_by(id=taId).first()
     print(taInfo.json())
     # return taInfo.json(), 200
-    return 2
+    return "200", 200
