@@ -338,7 +338,7 @@ class CommentTA(db.Model):
     taId: Mapped[int] = mapped_column(ForeignKey(('ta_infos.id')))
     comment: Mapped[str]
     handlerId: Mapped[int] = mapped_column(ForeignKey(('users.id')))
-    handler: Mapped["User"] = relationship(backref="issued_comments")
+    handler: Mapped["User"] = relationship(backref="issued_ta_comments")
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     
     def __repr__(self):
