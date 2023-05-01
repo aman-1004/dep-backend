@@ -98,7 +98,7 @@ class Role(db.Model):
     prevStage: Mapped[str] = mapped_column(nullable=True)
 
     def __repr__(self):
-        return "Role {id: %s, designation: %s, payLevel: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
+        return "Role {id: %s, roleName: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
                 self.id,
                 self.roleName,
                 self.stageCurrent,

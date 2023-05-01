@@ -2,18 +2,12 @@ Section	Type	current	next	prev
 -	Applicant	0	1	
 -	HOD	1	2	0
 Establishment Section	Junior Assistant Establishment	2	3	0
-	Junior Superintendent Establishment	3	3	0
 	Superintendent Establishment	3	4	0
-	AR	4	4	0
 	DR	4	5	0
 Accounts Section	JAA	5	5	0
-	SAA	5	6	0
-	JAO	6	6	0
 	AO	6	7	0
-	AR	7	7	0
 	DR	7	8	0
 Audit Section	Dealing Assistant	8	9	0
-	JAO	9	9	0
 	AO	9	10	0
 	Sr. Audit Officer	10	11	0
 -	Registrar	11	12	0
