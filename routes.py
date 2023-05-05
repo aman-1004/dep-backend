@@ -46,7 +46,7 @@ def getUserInfo():
                 "department": userInfo.department,
                 "isApplicant": True if userInfo.roleId == 0 else False,
                 "roleId": userInfo.roleId,
-                "designation": userInfo.role.designation,
+                "designation": userInfo.designation,
                 "role": userInfo.role.json(),
                 }, 200
     
