@@ -1,4 +1,5 @@
-from flask import Blueprint, session, request
+import os
+from flask import Blueprint, session, request, send_file
 import json
 import random
 from protected_routes import router as protected_router
@@ -51,6 +52,15 @@ def getUserInfo():
                 }, 200
     
     return {}, 401
+
+
+
+@protected_router.route('/getSignImage', methods=["POST"])
+def getSignImage():
+    fileName = session.get('userInfo').signUrl
+    base_path = os.path.join(os.path.dirname(__file__), 'uploads')
+    filePath = f"{base_path}/{fileName}"
+    return send_file(filePath) 
 
 
 @protected_router.route('/logout', methods=['POST'])

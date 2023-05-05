@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_session import Session
 import sys
@@ -7,6 +8,9 @@ from models import db, User, Role
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import Select2Widget
+from flask_migrate import Migrate
+from flask_admin.form import ImageUploadField
+
 
 if sys.version_info.major == 3 and sys.version_info.minor >= 10:
     from collections.abc import MutableSet
@@ -20,6 +24,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db.init_app(app)
+
+migrate = Migrate(app, db)
 app.register_blueprint(router)
 admin = Admin(app)
 
@@ -29,8 +35,19 @@ def home():
 
 
 class UserView(ModelView):
-    column_list = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'roleId', 'role', 'dateOfJoining', 'department', 'ltcInfos')
-    form_columns = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'role', 'dateOfJoining', 'department', 'ltcInfos')
+    column_list = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'roleId', 'role', 'dateOfJoining', 'department', 'ltcInfos', 'signUrl')
+    form_columns = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'role', 'dateOfJoining', 'department', 'ltcInfos', 'signUrl')
+    form_overrides = {
+        'signUrl': ImageUploadField
+    }
+    
+    form_args = {
+        'signUrl': {
+            'label': 'Image',
+            'base_path': os.path.join(os.path.dirname(__file__), 'uploads'),
+            'url_relative_path': 'uploads'
+        }
+    }
 
 
 class RoleView(ModelView):

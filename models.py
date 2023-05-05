@@ -20,6 +20,7 @@ class User(db.Model):
     role: Mapped["Role"] = relationship(backref="users")
     dateOfJoining: Mapped[datetime]
     # isApplicant: Mapped[bool]
+    signUrl: Mapped[str]
     department: Mapped[str]
     ltcInfos: Mapped[List["LTCInfo"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
