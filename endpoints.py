@@ -1,7 +1,7 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication, listLiveApplications, listLiveTAApplications
 from nonApplicantEndpoints import router as nonApplicantRouter
-from models import LTCInfo, TAInfo, db
+from models import LTCInfo, TAInfo, db, Notification, User
 import json
 from typing import List
 
@@ -69,3 +69,11 @@ def getTAInfo():
     print(taInfo.json())
     # return taInfo.json(), 200
     return "200", 200
+
+
+@router.route('/getNotifications', methods=["POST"])
+def getNotifications():
+    # return [notification.json() for notification in Notification.query.filter(Notification.userId == session.get('userInfo').id)]
+    # return [notification.json() for notification in session.get('userInfo').notifications]
+    notifications = User.query.filter(User.id==session.get('userInfo').id).first().notifications
+    return [n.json() for n in notifications]

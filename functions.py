@@ -1,4 +1,4 @@
-from models import User, LTCInfo, db
+from models import User, LTCInfo, db, Notification
 
 
 def checkEmail(emailId):
@@ -22,3 +22,9 @@ def listLiveTAApplications(userInfo):
     # add Stage current here
     liveTa = filter(lambda ta: True, User.query.filter(User.id==userInfo.id).first().taInfos)
     return list(liveTa)
+
+
+def addNotification(userId, message):
+    user = User.query.filter(User.id == userId).first()
+    user.notifications.append(Notification(message))
+    db.session.commit()
