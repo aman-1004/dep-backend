@@ -161,4 +161,3 @@ def getTAComments():
     
     return [comment.json() for comment in taInfo.comments]
     # return {}
-
