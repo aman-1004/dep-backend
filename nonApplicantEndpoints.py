@@ -38,6 +38,7 @@ def submitHodData():
     comment: str = request.json.get('comment')
     status: str = request.json.get('status')
     ltcFormId: int = request.json.get('formId')
+    print([comment, status, ltcFormId])
     ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
     addCommentLTCForm(comment, ltcInfo, handlerId=handlerInfo.id)
     if(status == 'ACCEPT'):
@@ -53,6 +54,8 @@ def submitHodData():
 
 @router.route('/submitEstabData', methods=['POST'])
 def submitEstabData():
+    print("Inside Estab Function")
+    print(request.json)
     return submitHodData()
 
 

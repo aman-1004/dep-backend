@@ -34,10 +34,11 @@ def listLiveLTCApplicationHandle():
 def getLTCInfo():
     ltcId = request.json.get('ltcId')
     ltcInfo = LTCInfo.query.filter_by(id=ltcId).first()
-    print(ltcInfo.json())
+    if(ltcInfo):
+        print(ltcInfo.json())
+        return ltcInfo.json(), 200
     # return ltcInfo.json(), 200
-    return 200
-
+    return {}, 400
 
 @router.route('/createNewTAApplication', methods=['POST'])
 def createNewTAAApplicationHandle():
