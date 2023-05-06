@@ -34,10 +34,11 @@ def listLiveLTCApplicationHandle():
 def getLTCInfo():
     ltcId = request.json.get('ltcId')
     ltcInfo = LTCInfo.query.filter_by(id=ltcId).first()
-    print(ltcInfo.json())
+    if(ltcInfo):
+        print(ltcInfo.json())
+        return ltcInfo.json(), 200
     # return ltcInfo.json(), 200
-    return 200
-
+    return {}, 400
 
 @router.route('/createNewTAApplication', methods=['POST'])
 def createNewTAAApplicationHandle():
@@ -66,14 +67,16 @@ def listLiveTAApplicationsHandle():
 def getTAInfo():
     taId = request.json.get('taId')
     taInfo = TAInfo.query.filter_by(id=taId).first()
-    print(taInfo.json())
-    # return taInfo.json(), 200
-    return "200", 200
+    if(taInfo):
+        print(taInfo.json())
+        return taInfo.json(), 200
+    return {}, 401
 
 
 @router.route('/getNotifications', methods=["POST"])
 def getNotifications():
-    # return [notification.json() for notification in Notification.query.filter(Notification.userId == session.get('userInfo').id)]
-    # return [notification.json() for notification in session.get('userInfo').notifications]
-    notifications = User.query.filter(User.id==session.get('userInfo').id).first().notifications
-    return [n.json() for n in notifications]
+    user = User.query.filter(User.id==session.get('userInfo').id).first()
+    if(user):
+        notifications = user.notifications
+        return [n.json() for n in notifications]
+    return [], 401

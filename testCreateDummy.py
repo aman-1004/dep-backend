@@ -37,12 +37,11 @@ def newLTC(ltc):
 
 def createNewRole():
     json = {
-        "id": 1,
-        "designation": "Establishment Section JA",
-        "payLevel": 8,
-        "stageCurrent": 2,
-        "nextStage": 2,
-        "prevStage": 0 
+        "id": 0,
+        "roleName": "applicant",
+        "stageCurrent": 0,
+        "nextStage": 1,
+        "prevStage": 0, 
     }
 
     db.session.add(newRole(json))
