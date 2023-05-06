@@ -67,6 +67,8 @@ def listLiveTAApplicationsHandle():
 def getTAInfo():
     taId = request.json.get('taId')
     taInfo = TAInfo.query.filter_by(id=taId).first()
+    print(taId)
+    print(taInfo.json())
     if(taInfo):
         print(taInfo.json())
         return taInfo.json(), 200

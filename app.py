@@ -4,7 +4,7 @@ from flask_session import Session
 import sys
 import collections
 from routes import router
-from models import db, User, Role
+from models import db, User, Role, TAInfo, LTCInfo
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import Select2Widget
@@ -56,6 +56,8 @@ class RoleView(ModelView):
 
 admin.add_view(UserView(User, db.session))
 admin.add_view(RoleView(Role, db.session))
+admin.add_view(ModelView(LTCInfo, db.session))
+admin.add_view(ModelView(TAInfo, db.session))
 
 
 if (__name__ == "__main__"):

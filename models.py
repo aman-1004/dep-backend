@@ -269,6 +269,7 @@ class TAInfo(db.Model):
     comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos")
     stageRedirect: Mapped[str] = mapped_column(nullable=True)
     stageCurrent: Mapped[str]
+    fillDate: Mapped[Optional[datetime]]
     
     # stageCurrent: Mapped[int]
 
@@ -278,13 +279,17 @@ class TAInfo(db.Model):
         self.ltcId = ltcId
         self.journeyDetails = [JourneyDetail(journeyDet) for journeyDet in journeyDetails]
         self.stageCurrent = 1
+        self.fillDate = datetime.now()
+
 
     def json(self):
         return {
                 "id": self.id,
                 "user": self.user.json(),
                 "ltcInfo": self.ltcInfo.json(),
-                "journeyDetails": [journeyDet.json() for journeyDet in self.journeyDetails]
+                "journeyDetails": [journeyDet.json() for journeyDet in self.journeyDetails],
+                "fillDate": self.fillDate,
+                "stageCurrent": self.stageCurrent,
                 }
 
 class JourneyDetail(db.Model):
