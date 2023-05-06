@@ -91,6 +91,7 @@ def getComments():
 
 def getPendingTAByStage(stageCurrent):
     taInfos = TAInfo.query.filter_by(stageCurrent=stageCurrent).all()
+    print([ta.json() for ta in taInfos])
     return [ta.json() for ta in taInfos]
 
 
