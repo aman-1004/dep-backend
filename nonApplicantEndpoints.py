@@ -80,12 +80,23 @@ def submitRegistrarData():
 
 @router.route('/getComments', methods=['POST'])
 def getComments():
-    ltcFormId = request.json.get('ltcId')
+    ltcFormId = request.json.get('id')
     # print('ltcId', ltcId)
     # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
     ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
     
     return [comment.json() for comment in ltcInfo.comments]
+    # return {}
+
+
+@router.route('/getTAComments', methods=['POST'])
+def getTAComments():
+    taFormId = request.json.get('id')
+    # print('ltcId', ltcId)
+    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
+    taInfo: TAInfo = TAInfo.query.filter_by(id=taFormId).first()
+    
+    return [comment.json() for comment in taInfo.comments]
     # return {}
 
 
@@ -98,6 +109,7 @@ def getPendingTAByStage(stageCurrent):
 @router.route('/listPendingTAApplication', methods=['POST'])
 def listPendingTAApplication():
     handlerInfo = session.get('userInfo')
+    print(handlerInfo.id)
     return getPendingTAByStage(handlerInfo.role.stageCurrent)
 
 
@@ -155,13 +167,3 @@ def submitTADeanData():
 def submitTARegistrarData():
     return submitTAHodData()
 
-
-@router.route('/getTAComments', methods=['POST'])
-def getTAComments():
-    taFormId = request.json.get('taId')
-    # print('ltcId', ltcId)
-    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
-    taInfo: TAInfo = TAInfo.query.filter_by(id=taFormId).first()
-    
-    return [comment.json() for comment in taInfo.comments]
-    # return {}
