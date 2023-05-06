@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, DateTime, Integer, func
 from datetime import datetime
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={"expire_on_commit": False})
 
 
 class User(db.Model):
@@ -20,8 +20,10 @@ class User(db.Model):
     role: Mapped["Role"] = relationship(backref="users")
     dateOfJoining: Mapped[datetime]
     # isApplicant: Mapped[bool]
+    signUrl: Mapped[Optional[str]]
     department: Mapped[str]
     ltcInfos: Mapped[List["LTCInfo"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    notifications: Mapped[List["Notification"]] = relationship(cascade="all, delete-orphan")
 
     def __init__(self, json):
         self.firstName = json['firstName']
@@ -353,3 +355,22 @@ class CommentTA(db.Model):
                 "created_at": self.created_at,
                 }
     
+
+
+
+class Notification(db.Model):
+    __tablename__ = "notifications"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    userId: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    time: Mapped[datetime]
+    message: Mapped[str]
+
+    def __init__(self, message):
+        self.time = datetime.now()
+        self.message = message
+
+    def json(self):
+        return {
+            'time': self.time,
+            'message': self.message,
+        }
