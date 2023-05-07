@@ -52,7 +52,12 @@ def listLiveLTCApplicationHandle():
     return ltcInfos
 
 # working fine
-
+@router.route('/listDoneLTCApplications', methods=['POST'])
+def listDoneLTCApplicationsHandle():
+    userInfo = session.get('userInfo')
+    taInfos = [ta.json() for ta in listDoneLTCApplications(userInfo)]
+    return taInfos
+    pass
 
 @router.route('/getLTCInfo', methods=['POST'])
 def getLTCInfo():
@@ -73,12 +78,6 @@ def listLiveTAApplicationsHandle():
     return taInfos
     pass
 
-@router.route('/listDoneTAApplications', methods=['POST'])
-def listDoneTAApplicationsHandle():
-    userInfo = session.get('userInfo')
-    taInfos = [ta.json() for ta in listDoneTAApplications(userInfo)]
-    return taInfos
-    pass
 
 @router.route('/getTAInfo', methods=['POST'])
 def getTAInfo():

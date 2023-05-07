@@ -95,9 +95,9 @@ class Role(db.Model):
     __tablename__ = "roles"
     id: Mapped[int] = mapped_column(primary_key=True)
     roleName: Mapped[str] 
-    stageCurrent: Mapped[str]
-    nextStage: Mapped[str]
-    prevStage: Mapped[str] = mapped_column(nullable=True)
+    stageCurrent: Mapped[int]
+    nextStage: Mapped[int]
+    prevStage: Mapped[int] = mapped_column(nullable=True)
 
     def __repr__(self):
         return "Role {id: %s, roleName: %s, stageCurrent: %s, nextStage: %s, prevStage: %s}" % (
@@ -141,8 +141,8 @@ class LTCInfo(db.Model):
     advanceRequired: Mapped[bool]
     encashmentAvailed: Mapped[bool]
     encashmentNoOfDays: Mapped[int]
-    stageRedirect: Mapped[str] = mapped_column(nullable=True)
-    stageCurrent: Mapped[str]
+    stageRedirect: Mapped[int] = mapped_column(nullable=True)
+    stageCurrent: Mapped[int]
     fillDate: Mapped[datetime]
     hodDate: Mapped[datetime]= mapped_column(nullable=True)
     estabDate: Mapped[datetime]= mapped_column(nullable=True)
@@ -268,8 +268,8 @@ class TAInfo(db.Model):
     ltcInfo: Mapped["LTCInfo"] = relationship(backref="taInfo")
     journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo", cascade="all, delete-orphan") 
     comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos")
-    stageRedirect: Mapped[str] = mapped_column(nullable=True)
-    stageCurrent: Mapped[str]
+    stageRedirect: Mapped[int] = mapped_column(nullable=True)
+    stageCurrent: Mapped[int]
     fillDate: Mapped[Optional[datetime]]
     receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
     
