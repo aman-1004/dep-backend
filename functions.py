@@ -22,13 +22,16 @@ def createNewLTCApplication(userInfo, formInfo):
     return info
 
 def listLiveApplications(userInfo):
-    liveLtc = filter(lambda ltc: ltc.stageCurrent != 1 and ltc.stageCurrent <= 100, User.query.filter(User.id==userInfo.id).first().ltcInfos)
+    liveLtc = filter(lambda ltc: ltc.stageCurrent != 0 and ltc.stageCurrent <= 100, User.query.filter(User.id==userInfo.id).first().ltcInfos)
     return list(liveLtc)
 
+def listDoneLTCApplications(userInfo):
+    liveLtc = filter(lambda ltc: ltc.stageCurrent == 100, User.query.filter(User.id==userInfo.id).first().ltcInfos)
+    return list(liveLtc)
 
 def listLiveTAApplications(userInfo):
     # add Stage current here
-    liveTa = filter(lambda ta: True, User.query.filter(User.id==userInfo.id).first().taInfos)
+    liveTa = filter(lambda ta: ta.stageCurrent != 0 and ta.stageCurrent <= 100, User.query.filter(User.id==userInfo.id).first().taInfos)
     return list(liveTa)
 
 

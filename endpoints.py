@@ -1,5 +1,5 @@
 from flask import request, session, Blueprint
-from functions import createNewLTCApplication, listLiveApplications, listLiveTAApplications
+from functions import createNewLTCApplication, listLiveApplications, listLiveTAApplications, listDoneLTCApplications
 from nonApplicantEndpoints import router as nonApplicantRouter
 from models import LTCInfo, TAInfo, db, Notification, User, Receipt
 import uuid, mimetypes, json, os
@@ -73,6 +73,12 @@ def listLiveTAApplicationsHandle():
     return taInfos
     pass
 
+@router.route('/listDoneTAApplications', methods=['POST'])
+def listDoneTAApplicationsHandle():
+    userInfo = session.get('userInfo')
+    taInfos = [ta.json() for ta in listDoneTAApplications(userInfo)]
+    return taInfos
+    pass
 
 @router.route('/getTAInfo', methods=['POST'])
 def getTAInfo():
