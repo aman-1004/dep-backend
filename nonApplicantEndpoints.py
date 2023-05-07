@@ -1,6 +1,6 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication
-from models import LTCInfo, Comment, User, db, TAInfo, Notification
+from models import LTCInfo, Comment, User, db, TAInfo, Notification, CommentTA
 from datetime import datetime
 
 router =  Blueprint("nonApplicantEndpoints", __name__)
@@ -123,7 +123,7 @@ def addCommentLTCForm(comment: str, ltcInfo: LTCInfo, handlerId):
                                        "created_at": datetime.now()}))
 
 def addCommentTAForm(comment: str, taInfo: TAInfo, handlerId):
-    taInfo.comments.append(Comment(**{"comment": comment, 
+    taInfo.comments.append(CommentTA(**{"comment": comment, 
                                        "handlerId": handlerId, 
                                        "created_at": datetime.now()}))
 

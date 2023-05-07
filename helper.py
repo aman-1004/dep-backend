@@ -1,6 +1,8 @@
 from random import randint
 import requests
-import env
+# import env
+
+env = {}
 def randomGen(n):
     return ''.join([str(randint(0, 9)) for i in range(0, n)])
 
