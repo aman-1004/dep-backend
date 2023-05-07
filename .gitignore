@@ -3,3 +3,4 @@ flask_session/
 __pycache__/
 *.tmp.a
 todo.txt
+env.py

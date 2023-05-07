@@ -1,6 +1,6 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication
-from models import LTCInfo, Comment, User, db, TAInfo
+from models import LTCInfo, Comment, User, db, TAInfo, Notification
 from datetime import datetime
 
 router =  Blueprint("nonApplicantEndpoints", __name__)
@@ -43,9 +43,13 @@ def submitHodData():
     addCommentLTCForm(comment, ltcInfo, handlerId=handlerInfo.id)
     if(status == 'ACCEPT'):
         ltcInfo.stageCurrent = handlerInfo.role.nextStage
+        message = f"LTC Form {ltcInfo.id} forwarded by {handlerInfo.designation}"
     else:    
         ltcInfo.stageCurrent = handlerInfo.role.prevStage
+        message = f"LTC Form {ltcInfo.id} rejected by {handlerInfo.designation}"
     
+    print(message)
+    applicantInfo = ltcInfo.user.notifications.append(Notification(message))
     # print([comment.json() for comment in ltcInfo.comments])
     # # print(ltcInfo.json())
     db.session.commit()
@@ -134,9 +138,13 @@ def submitTAHodData():
     addCommentTAForm(comment, taInfo, handlerId=handlerInfo.id)
     if(status == 'ACCEPT'):
         taInfo.stageCurrent = handlerInfo.role.nextStage
-    else:    
+        message = f"TA Form {taInfo.id} forwarded by {handlerInfo.designation}"
+    else:
         taInfo.stageCurrent = handlerInfo.role.prevStage
-    
+        message = f"TA Form {taInfo.id} rejected by {handlerInfo.designation}"
+
+    print(message)
+    applicantInfo = taInfo.user.notifications.append(Notification(message))
     # print([comment.json() for comment in ltcInfo.comments])
     # # print(ltcInfo.json())
     db.session.commit()

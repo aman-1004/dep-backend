@@ -7,7 +7,7 @@ import random
 from protected_routes import router as protected_router
 # from checkEmail import check
 from functions import checkEmail
-
+from helper import randomGen, sendOTP
 
 router = Blueprint("router", __name__)
 # router.register_blueprint(protected_router, url_prefix='/auth')
@@ -73,13 +73,29 @@ def logOut():
 
 @router.route('/uploadReceipt', methods=["POST"])
 def uploadReceipt():
-    # print('request.files', request.files)
-    print(request.files)
-    print(request.form['json'])
-    # print(request.)
-    # for file in request.files.getlist('file'):
-    #     fileName = uuid.uuid4().hex + mimetypes.guess_extension(file.mimetype)
-    #     base_path = os.path.join(os.path.dirname(__file__), 'receipts')
-    #     filePath = f"{base_path}/{fileName}"
-    #     print(file.save(filePath))
+    for file in request.files.getlist('file'):
+        fileName = uuid.uuid4().hex + mimetypes.guess_extension(file.mimetype)
+        base_path = os.path.join(os.path.dirname(__file__), 'receipts')
+        filePath = f"{base_path}/{fileName}"
+        print(file.save(filePath))
     return "what"
+
+
+
+@router.route("/loginOTP", methods=["POST"])
+def loginOTP():
+    print(request.form)
+    if(request.is_json):
+        emailId = json.loads(request.data).get('emailId')
+    else:
+        emailId = request.form.get('emailId', None)
+    print('emailId is', emailId)
+    if (emailId):
+        otp: int  = randomGen(4)
+        sendOTP(emailId, otp)
+        session['otp'] = otp
+        userInfo = checkEmail(emailId)
+        if(userInfo):
+            sendOTP(email=emailId, otp=otp)
+            return "User Found", 200
+        return "User Not Found", 401
