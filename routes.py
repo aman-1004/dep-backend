@@ -1,3 +1,5 @@
+import mimetypes
+import uuid
 import os
 from flask import Blueprint, session, request, send_file
 import json
@@ -67,3 +69,17 @@ def getSignImage():
 def logOut():
     session.pop('userInfo')
     return "", 200
+
+
+@router.route('/uploadReceipt', methods=["POST"])
+def uploadReceipt():
+    # print('request.files', request.files)
+    print(request.files)
+    print(request.form['json'])
+    # print(request.)
+    # for file in request.files.getlist('file'):
+    #     fileName = uuid.uuid4().hex + mimetypes.guess_extension(file.mimetype)
+    #     base_path = os.path.join(os.path.dirname(__file__), 'receipts')
+    #     filePath = f"{base_path}/{fileName}"
+    #     print(file.save(filePath))
+    return "what"

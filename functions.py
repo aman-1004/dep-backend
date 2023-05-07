@@ -1,5 +1,6 @@
-from models import User, LTCInfo, db, Notification
-
+from models import User, LTCInfo, db, Notification, Receipt
+from flask import request
+import uuid, mimetypes, json, os
 
 def checkEmail(emailId):
     foundUser = User.query.filter(User.emailId == emailId).first()
@@ -8,10 +9,17 @@ def checkEmail(emailId):
 def createNewLTCApplication(userInfo, formInfo):
     formInfo['userId'] = userInfo.id
     info = LTCInfo(formInfo)
+    for file in request.files.getlist('file'):
+        fileName = uuid.uuid4().hex + mimetypes.guess_extension(file.mimetype)
+        base_path = os.path.join(os.path.dirname(__file__), 'receipts')
+        filePath = f"{base_path}/{fileName}"
+        info.receipts.append(Receipt(filePath))
+        print(file.save(filePath))
+
     db.session.add(info)
     db.session.commit()
     print("JSON LTCINFO", info.json())
-    pass
+    return info
 
 def listLiveApplications(userInfo):
     liveLtc = filter(lambda ltc: ltc.stageCurrent != 1, User.query.filter(User.id==userInfo.id).first().ltcInfos)

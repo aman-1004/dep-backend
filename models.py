@@ -1,10 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from typing import List, Optional
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, DateTime, Integer, func
+from sqlalchemy import ForeignKey, String, DateTime, Integer, func, CheckConstraint, or_
 from datetime import datetime
 
-db = SQLAlchemy(session_options={"expire_on_commit": False})
+db = SQLAlchemy()
 
 
 class User(db.Model):
@@ -152,7 +152,8 @@ class LTCInfo(db.Model):
     deanDate: Mapped[datetime]= mapped_column(nullable=True)
     peopleInvolved: Mapped[List["PersonInvolvedLTC"]] = relationship(backref='ltc_infos', cascade="all, delete-orphan")
     comments: Mapped[List["Comment"]] = relationship(backref="ltc_infos")
-    
+    receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
+
     def __init__(self, json):
         peopleInvolvedinLTC = json.get('peopleInvolved', [])
         dateLog = json.get('dateLog', [])
@@ -265,11 +266,12 @@ class TAInfo(db.Model):
     user: Mapped["User"] = relationship(backref="taInfos")
     ltcId: Mapped[int] = mapped_column(ForeignKey('ltc_infos.id'))
     ltcInfo: Mapped["LTCInfo"] = relationship(backref="taInfo")
-    journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo") 
+    journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo", cascade="all, delete-orphan") 
     comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos")
     stageRedirect: Mapped[str] = mapped_column(nullable=True)
     stageCurrent: Mapped[str]
     fillDate: Mapped[Optional[datetime]]
+    receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
     
     # stageCurrent: Mapped[int]
 
@@ -379,3 +381,24 @@ class Notification(db.Model):
             'time': self.time,
             'message': self.message,
         }
+    
+
+class Receipt(db.Model):
+    __tablename__ = "receipts"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ltcFormId: Mapped[Optional[int]] = mapped_column(ForeignKey('ltc_infos.id'))
+    taFormId: Mapped[Optional[int]] = mapped_column(ForeignKey('ta_infos.id'))
+    filePath: Mapped[str]
+
+    __table_args__ = (
+        CheckConstraint(
+            or_(ltcFormId.is_(None), taFormId.is_(None)),
+            name='either_ltc_or_ta'
+        ),
+    )
+
+    def __init__(self, filePath):
+        self.filePath = filePath
+
+
+

@@ -1,8 +1,8 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication, listLiveApplications, listLiveTAApplications
 from nonApplicantEndpoints import router as nonApplicantRouter
-from models import LTCInfo, TAInfo, db, Notification, User
-import json
+from models import LTCInfo, TAInfo, db, Notification, User, Receipt
+import uuid, mimetypes, json, os
 from typing import List
 
 router = Blueprint("endpoints", __name__)
@@ -10,15 +10,39 @@ router.register_blueprint(nonApplicantRouter)
 
 # need checking
 
+def uploadReceipts(ltc):
+    return "what"
 
 @router.route('/createNewLTCApplications', methods=['POST'])
 def createNewLTCApplicationHandle():
-    ltcInfo = request.json
+    ltcInfo = json.loads(request.form['json'])
     userInfo = session.get('userInfo')
     print(userInfo)
-    createNewLTCApplication(userInfo, ltcInfo)
+    ltc = createNewLTCApplication(userInfo, ltcInfo)
     return "Done", 200
 
+@router.route('/createNewTAApplication', methods=['POST'])
+def createNewTAAApplicationHandle():
+    json_data = json.loads(request.form['json'])
+    journeyDetails = json_data.get('journeyDetails')
+    userInfo = session.get('userInfo')
+    ltcId = json_data.get('ltcId')
+    taInfo = TAInfo(userId=userInfo.id,
+                    ltcId=ltcId,
+                    journeyDetails=journeyDetails)
+
+    for file in request.files.getlist('file'):
+        fileName = uuid.uuid4().hex + mimetypes.guess_extension(file.mimetype)
+        base_path = os.path.join(os.path.dirname(__file__), 'receipts')
+        filePath = f"{base_path}/{fileName}"
+        taInfo.receipts.append(Receipt(filePath))
+        print(file.save(filePath))
+
+    db.session.add(taInfo)
+    db.session.commit()
+    print(taInfo.json())
+    # print(taInfo.json())
+    return "Done", 200
 
 # working fine
 @router.route('/listLiveLTCApplications', methods=['POST', 'GET'])
@@ -40,19 +64,6 @@ def getLTCInfo():
     # return ltcInfo.json(), 200
     return {}, 400
 
-@router.route('/createNewTAApplication', methods=['POST'])
-def createNewTAAApplicationHandle():
-    journeyDetails = request.json.get('journeyDetails')
-    userInfo = session.get('userInfo')
-    ltcId = request.json.get('ltcId')
-    taInfo = TAInfo(userId=userInfo.id,
-                    ltcId=ltcId,
-                    journeyDetails=journeyDetails)
-    db.session.add(taInfo)
-    db.session.commit()
-    print(taInfo.json())
-    # print(taInfo.json())
-    return "Done", 200
 
 
 @router.route('/listLiveTAApplications', methods=['POST'])
