@@ -153,6 +153,7 @@ class LTCInfo(db.Model):
     peopleInvolved: Mapped[List["PersonInvolvedLTC"]] = relationship(backref='ltc_infos', cascade="all, delete-orphan")
     comments: Mapped[List["Comment"]] = relationship(backref="ltc_infos")
     receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
+    lastForwardDate: Mapped[datetime]= mapped_column(nullable=True)
 
     def __init__(self, json):
         peopleInvolvedinLTC = json.get('peopleInvolved', [])
@@ -232,7 +233,8 @@ class LTCInfo(db.Model):
                 "auditDate": self.auditDate,
                 "registrarDate": self.registrarDate,
                 "deanDate": self.deanDate,
-                "peopleInvolved": [person.json() for person in self.peopleInvolved]
+                "peopleInvolved": [person.json() for person in self.peopleInvolved],
+                "lastForwardDate": self.lastForwardDate,
                 }
 
 class Comment(db.Model):
@@ -272,6 +274,7 @@ class TAInfo(db.Model):
     stageCurrent: Mapped[int]
     fillDate: Mapped[Optional[datetime]]
     receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
+    lastForwardDate: Mapped[datetime]= mapped_column(nullable=True)
     
     # stageCurrent: Mapped[int]
 
@@ -292,6 +295,7 @@ class TAInfo(db.Model):
                 "journeyDetails": [journeyDet.json() for journeyDet in self.journeyDetails],
                 "fillDate": self.fillDate,
                 "stageCurrent": self.stageCurrent,
+                "lastForwardDate": self.lastForwardDate,
                 }
 
 class JourneyDetail(db.Model):

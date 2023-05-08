@@ -98,3 +98,19 @@ def getNotifications():
         notifications = user.notifications
         return [n.json() for n in notifications]
     return [], 401
+
+@router.route('/listLTCOfficeOrders', methods=['POST'])
+def listLTCOfficeOrder():
+    handlerInfo = session.get('userInfo')
+    if(handlerInfo.id ==0): 
+        list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.userId == handlerInfo.id and LTCInfo.stageCurrent >= 100).all()]))
+    return list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.stageCurrent >= 100).all()]))
+
+
+
+@router.route('/listTAOfficeOrders', methods=['POST'])
+def listTAOfficeOrder():
+    handlerInfo = session.get('userInfo')
+    if(handlerInfo.id ==0): 
+        list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.userId == handlerInfo.id and TAInfo.stageCurrent >= 100).all()]))
+    return list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.stageCurrent >= 100).all()]))
