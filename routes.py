@@ -31,11 +31,32 @@ def login():
     if (emailId):
         userInfo = checkEmail(emailId)
         if (userInfo):
-            session['userInfo'] = userInfo
-        return getUserInfo() 
+            otp = randomGen(4)
+            session['otp'] = otp
+            session['emailId'] = emailId
+            print(f'{otp} sent to {emailId}')
+            # session['userInfo'] = userInfo
+            return "200", 200
+        return "User not found", 401
+        # return getUserInfo() 
     else:
-        return {}, 401
+        "Email not received", 401
 
+@router.route('/acceptOTP', methods=['POST'])
+def acceptOTP():
+    emailId = session.get('emailId', None)
+    otp = request.form.get('otp', None)
+    if(emailId and otp):
+        userInfo = checkEmail(emailId)
+        otp_ = session['otp']
+        session['otp'] = None
+        session['emailId'] = None
+        session['userInfo'] = userInfo
+        uf = getUserInfo()
+        print('uf: ', uf)
+        if(otp_==otp): return getUserInfo() 
+        return "Incorrect OTP", 401
+    return "OTP not received", 401
 
 @protected_router.route('/getUserInfo', methods=["POST", "GET"])
 def getUserInfo():
