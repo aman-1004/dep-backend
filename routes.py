@@ -3,6 +3,7 @@ import uuid
 import os
 from flask import Blueprint, session, request, send_file
 import json
+from helper import sendOTP
 import random
 from protected_routes import router as protected_router
 # from checkEmail import check
@@ -35,6 +36,7 @@ def login():
             session['otp'] = otp
             session['emailId'] = emailId
             print(f'{otp} sent to {emailId}')
+            # sendOTP(emailId, otp)
             # session['userInfo'] = userInfo
             return "200", 200
         return "User not found", 401
