@@ -7,7 +7,7 @@ router = Blueprint("protected-router", __name__)
 def before():
     if (session.get('userInfo', None) is None):
         return "You are not authorized", 401
-    if (not session['userInfo'].get('emailId')):
+    if (not session['userInfo'].emailId):
         return "You are not authorized", 401
 
     # print(session)
