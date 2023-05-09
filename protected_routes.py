@@ -1,14 +1,14 @@
-from flask import request, session, Blueprint, Response
-router = Blueprint("protected-router", __name__) 
 from endpoints import router as endpoints_router
+from flask import request, session, Blueprint, Response
+router = Blueprint("protected-router", __name__)
 
 
 @router.before_request
 def before():
     if (session.get('userInfo', None) is None):
-        return "You are not authorized", 401 
-    if (not session.userInfo or not session.userInfo.emailId):
-        return "You are not authorized", 401 
+        return "You are not authorized", 401
+    if (not session['userInfo'].get('emailId')):
+        return "You are not authorized", 401
 
     # print(session)
 
