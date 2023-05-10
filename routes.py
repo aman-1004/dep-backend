@@ -75,6 +75,7 @@ def getUserInfo():
                 "designation": userInfo.designation,
                 "role": userInfo.role.json(),
                 "payLevel": userInfo.payLevel,
+                "hometown": userInfo.hometown
                 }, 200
     
     return {}, 401

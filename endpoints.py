@@ -106,7 +106,7 @@ def getNotifications():
     user = User.query.filter(User.id == session.get('userInfo').id).first()
     if (user):
         notifications = user.notifications
-        return [n.json() for n in notifications]
+        return list(reversed([n.json() for n in notifications]))
     return [], 401
 
 
