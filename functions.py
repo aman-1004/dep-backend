@@ -1,7 +1,8 @@
-from models import User, LTCInfo, db, Notification, Receipt
+from models import User, LTCInfo, db, Notification, Receipt, Role,
 from flask import request
 import uuid, mimetypes, json, os
-
+from helper import remindStakeholder
+from datetime import datetime
 def checkEmail(emailId):
     foundUser = User.query.filter(User.emailId == emailId).first()
     return foundUser
@@ -39,3 +40,21 @@ def addNotification(userId, message):
     user = User.query.filter(User.id == userId).first()
     user.notifications.append(Notification(message))
     db.session.commit()
+
+
+def Reminders():
+    a = [j for j in LTCInfo.query.filter(
+        LTCInfo.stageCurrent != 0 and LTCInfo.stageCurrent < 100).all()]
+    f = filter(lambda j: (datetime.now() - j.lastForwardDate).days > 3, a)
+    forms = [{'firstName': x.user.firstName, 'lastName': x.user.lastName, 'delay': (
+        datetime.now() - x.lastForwardDate).days, 'stageCurrent': x.stageCurrent, 'id': x.id} for x in f]
+
+    for form in forms:
+        role = Role.query.filter(
+            Role.stageCurrent == form['stageCurrent']).first()
+        emails = [user.emailId for user in User.query.filter(
+            User.roleId == role.id)]
+        for email in emails:
+            form['email'] = email
+            print(form)
+            remindStakeholder(form)

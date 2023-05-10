@@ -337,7 +337,7 @@ class JourneyDetail(db.Model):
     #   departureDate:"2023-05-11",
     #   departureFrom:"Punjab",
     #   arrivalDate:"2023-05-13",
-    #   arrivalTo:"Chandigarh",
+    #   arrivalTo:"Chandigarh",,
     #   distance:75,
     #   modeOfTravel:"Bus",
     #   classOfTravel:"A",
