@@ -1,4 +1,4 @@
-from models import User, LTCInfo, db, Notification, Receipt, Role,
+from models import User, LTCInfo, db, Notification, Receipt, Role
 from flask import request
 import uuid, mimetypes, json, os
 from helper import remindStakeholder
@@ -42,7 +42,7 @@ def addNotification(userId, message):
     db.session.commit()
 
 
-def Reminders():
+def sendReminders():
     a = [j for j in LTCInfo.query.filter(
         LTCInfo.stageCurrent != 0 and LTCInfo.stageCurrent < 100).all()]
     f = filter(lambda j: (datetime.now() - j.lastForwardDate).days > 3, a)

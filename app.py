@@ -10,7 +10,9 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import Select2Widget
 from flask_migrate import Migrate
 from flask_admin.form import ImageUploadField
-
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from functions import sendReminders
 
 if sys.version_info.major == 3 and sys.version_info.minor >= 10:
     from collections.abc import MutableSet
@@ -24,6 +26,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db.init_app(app)
+
+scheduler = BackgroundScheduler()
+scheduler.start()
+
 
 migrate = Migrate(app, db)
 app.register_blueprint(router)
@@ -59,6 +65,10 @@ admin.add_view(RoleView(Role, db.session))
 admin.add_view(ModelView(LTCInfo, db.session))
 admin.add_view(ModelView(TAInfo, db.session))
 
+scheduler.add_job(
+    func=sendReminders,
+    trigger=CronTrigger.from_crontab("0 8 * * *"),  # run at midnight every day
+)
 
 if (__name__ == "__main__"):
     app.run(debug=True, port=5000)

@@ -1,6 +1,6 @@
 from random import randint
 import requests
-# import env
+import env
 
 env = {}
 def randomGen(n):
