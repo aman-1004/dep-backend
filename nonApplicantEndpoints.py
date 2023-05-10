@@ -3,10 +3,12 @@ from functions import createNewLTCApplication
 from models import LTCInfo, Comment, User, db, TAInfo, Notification, CommentTA
 from datetime import datetime
 
-router =  Blueprint("nonApplicantEndpoints", __name__)
+router = Blueprint("nonApplicantEndpoints", __name__)
+
 
 def isApplicant(stageCurrent):
     return stageCurrent == 0
+
 
 def getPendingByStage(stageCurrent):
     ltcInfos = LTCInfo.query.filter_by(stageCurrent=stageCurrent).all()
@@ -26,8 +28,8 @@ def listPendingLTCApplication():
 
 
 def addCommentLTCForm(comment: str, ltcInfo: LTCInfo, handlerId):
-    ltcInfo.comments.append(Comment(**{"comment": comment, 
-                                       "handlerId": handlerId, 
+    ltcInfo.comments.append(Comment(**{"comment": comment,
+                                       "handlerId": handlerId,
                                        "created_at": datetime.now()}))
 
 
@@ -42,20 +44,21 @@ def submitHodData():
     ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
     ltcInfo.lastForwardDate = datetime.now()
     addCommentLTCForm(comment, ltcInfo, handlerId=handlerInfo.id)
-    if(status == 'ACCEPT'):
+    if (status == 'ACCEPT'):
         ltcInfo.stageCurrent = handlerInfo.role.nextStage
         message = f"LTC Form {ltcInfo.id} forwarded by {handlerInfo.designation}"
-    else:    
+    else:
         ltcInfo.stageCurrent = handlerInfo.role.prevStage
         message = f"LTC Form {ltcInfo.id} rejected by {handlerInfo.designation}"
-    
+
     print(message)
     applicantInfo = ltcInfo.user.notifications.append(Notification(message))
     # print([comment.json() for comment in ltcInfo.comments])
     # # print(ltcInfo.json())
     db.session.commit()
 
-    return "200", 200 
+    return "200", 200
+
 
 @router.route('/submitEstabData', methods=['POST'])
 def submitEstabData():
@@ -78,31 +81,10 @@ def submitAuditData():
 def submitDeanData():
     return submitHodData()
 
+
 @router.route('/submitRegistrarData', methods=['POST'])
 def submitRegistrarData():
     return submitHodData()
-
-
-@router.route('/getComments', methods=['POST'])
-def getComments():
-    ltcFormId = request.json.get('id')
-    # print('ltcId', ltcId)
-    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
-    ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
-    
-    return [comment.json() for comment in ltcInfo.comments]
-    # return {}
-
-
-@router.route('/getTAComments', methods=['POST'])
-def getTAComments():
-    taFormId = request.json.get('id')
-    # print('ltcId', ltcId)
-    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
-    taInfo: TAInfo = TAInfo.query.filter_by(id=taFormId).first()
-    
-    return [comment.json() for comment in taInfo.comments]
-    # return {}
 
 
 def getPendingTAByStage(stageCurrent):
@@ -119,14 +101,16 @@ def listPendingTAApplication():
 
 
 def addCommentLTCForm(comment: str, ltcInfo: LTCInfo, handlerId):
-    ltcInfo.comments.append(Comment(**{"comment": comment, 
-                                       "handlerId": handlerId, 
+    ltcInfo.comments.append(Comment(**{"comment": comment,
+                                       "handlerId": handlerId,
                                        "created_at": datetime.now()}))
 
+
 def addCommentTAForm(comment: str, taInfo: TAInfo, handlerId):
-    taInfo.comments.append(CommentTA(**{"comment": comment, 
-                                       "handlerId": handlerId, 
-                                       "created_at": datetime.now()}))
+    taInfo.comments.append(CommentTA(**{"comment": comment,
+                                        "handlerId": handlerId,
+                                        "created_at": datetime.now()}))
+
 
 @router.route('/submitTAHodData', methods=["POST"])
 def submitTAHodData():
@@ -137,7 +121,7 @@ def submitTAHodData():
     taFormId: int = request.json.get('formId')
     taInfo: TAInfo = TAInfo.query.filter_by(id=taFormId).first()
     addCommentTAForm(comment, taInfo, handlerId=handlerInfo.id)
-    if(status == 'ACCEPT'):
+    if (status == 'ACCEPT'):
         taInfo.stageCurrent = handlerInfo.role.nextStage
         message = f"TA Form {taInfo.id} forwarded by {handlerInfo.designation}"
     else:
@@ -150,7 +134,7 @@ def submitTAHodData():
     # # print(ltcInfo.json())
     db.session.commit()
 
-    return "200", 200 
+    return "200", 200
 
 
 @router.route('/submitTAEstabData', methods=['POST'])
@@ -172,7 +156,7 @@ def submitTAAuditData():
 def submitTADeanData():
     return submitTAHodData()
 
+
 @router.route('/submitTARegistrarData', methods=['POST'])
 def submitTARegistrarData():
     return submitTAHodData()
-
