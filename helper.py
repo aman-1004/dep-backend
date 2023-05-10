@@ -1,6 +1,6 @@
 from random import randint
 import requests
-import env
+from env import OTP_URL, REMINDER_URL
 
 env = {}
 def randomGen(n):
@@ -8,7 +8,7 @@ def randomGen(n):
 
 
 def sendOTP(email, otp):
-    url = env.OTP_URL
+    url = OTP_URL
     print(url)
     formdata = {
         "email": email,
@@ -20,7 +20,7 @@ def sendOTP(email, otp):
 
 
 def remindStakeholder(json):
-    url = 'https://script.google.com/macros/s/AKfycbz-6CsoX7wt1WXtADgqpmq6aTzNgcI5vzRnB6lEF9aAQn6DU-dKeODScqdX-X_ybCu2hw/exec'
+    url = REMINDER_URL
     response = requests.post(url, data=json)
     print(response.content)
     response.raise_for_status()

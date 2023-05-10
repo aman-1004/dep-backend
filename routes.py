@@ -36,7 +36,7 @@ def login():
             session['otp'] = otp
             session['emailId'] = emailId
             print(f'{otp} sent to {emailId}')
-            # sendOTP(emailId, otp)
+            sendOTP(emailId, otp)
             # session['userInfo'] = userInfo
             return "200", 200
         return "User not found", 401
