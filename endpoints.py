@@ -27,6 +27,7 @@ def createNewTAAApplicationHandle():
     journeyDetails = json_data.get('journeyDetails')
     userInfo = session.get('userInfo')
     ltcId = json_data.get('ltcId')
+    LTCInfo.query.filter(LTCInfo.id == ltcId).first().role.stageCurrent = 101
     taInfo = TAInfo(userId=userInfo.id,
                     ltcId=ltcId,
                     journeyDetails=journeyDetails)
@@ -103,7 +104,7 @@ def getNotifications():
 def listLTCOfficeOrder():
     handlerInfo = session.get('userInfo')
     if(handlerInfo.id ==0): 
-        list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.userId == handlerInfo.id and LTCInfo.stageCurrent >= 100).all()]))
+        list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.userId == handlerInfo.id, LTCInfo.stageCurrent >= 100).all()]))
     return list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.stageCurrent >= 100).all()]))
 
 
@@ -112,5 +113,5 @@ def listLTCOfficeOrder():
 def listTAOfficeOrder():
     handlerInfo = session.get('userInfo')
     if(handlerInfo.id ==0): 
-        list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.userId == handlerInfo.id and TAInfo.stageCurrent >= 100).all()]))
+        list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.userId == handlerInfo.id, TAInfo.stageCurrent >= 100).all()]))
     return list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.stageCurrent >= 100).all()]))
