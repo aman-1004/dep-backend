@@ -2,7 +2,10 @@ from flask import request, session, Blueprint
 from functions import createNewLTCApplication, listLiveApplications, listLiveTAApplications, listDoneLTCApplications
 from nonApplicantEndpoints import router as nonApplicantRouter
 from models import LTCInfo, TAInfo, db, Notification, User, Receipt
-import uuid, mimetypes, json, os
+import uuid
+import mimetypes
+import json
+import os
 from typing import List
 
 router = Blueprint("endpoints", __name__)
@@ -10,8 +13,10 @@ router.register_blueprint(nonApplicantRouter)
 
 # need checking
 
+
 def uploadReceipts(ltc):
     return "what"
+
 
 @router.route('/createNewLTCApplications', methods=['POST'])
 def createNewLTCApplicationHandle():
@@ -20,6 +25,7 @@ def createNewLTCApplicationHandle():
     print(userInfo)
     ltc = createNewLTCApplication(userInfo, ltcInfo)
     return "Done", 200
+
 
 @router.route('/createNewTAApplication', methods=['POST'])
 def createNewTAAApplicationHandle():
@@ -45,6 +51,8 @@ def createNewTAAApplicationHandle():
     return "Done", 200
 
 # working fine
+
+
 @router.route('/listLiveLTCApplications', methods=['POST', 'GET'])
 def listLiveLTCApplicationHandle():
     userInfo = session.get('userInfo')
@@ -52,6 +60,8 @@ def listLiveLTCApplicationHandle():
     return ltcInfos
 
 # working fine
+
+
 @router.route('/listDoneLTCApplications', methods=['POST'])
 def listDoneLTCApplicationsHandle():
     userInfo = session.get('userInfo')
@@ -59,16 +69,16 @@ def listDoneLTCApplicationsHandle():
     return taInfos
     pass
 
+
 @router.route('/getLTCInfo', methods=['POST'])
 def getLTCInfo():
     ltcId = request.json.get('ltcId')
     ltcInfo = LTCInfo.query.filter_by(id=ltcId).first()
-    if(ltcInfo):
+    if (ltcInfo):
         print(ltcInfo.json())
         return ltcInfo.json(), 200
     # return ltcInfo.json(), 200
     return {}, 400
-
 
 
 @router.route('/listLiveTAApplications', methods=['POST'])
@@ -85,7 +95,7 @@ def getTAInfo():
     taInfo = TAInfo.query.filter_by(id=taId).first()
     print(taId)
     print(taInfo.json())
-    if(taInfo):
+    if (taInfo):
         print(taInfo.json())
         return taInfo.json(), 200
     return {}, 401
@@ -93,24 +103,48 @@ def getTAInfo():
 
 @router.route('/getNotifications', methods=["POST"])
 def getNotifications():
-    user = User.query.filter(User.id==session.get('userInfo').id).first()
-    if(user):
+    user = User.query.filter(User.id == session.get('userInfo').id).first()
+    if (user):
         notifications = user.notifications
         return [n.json() for n in notifications]
     return [], 401
 
+
 @router.route('/listLTCOfficeOrders', methods=['POST'])
 def listLTCOfficeOrder():
     handlerInfo = session.get('userInfo')
-    if(handlerInfo.id ==0): 
-        list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.userId == handlerInfo.id and LTCInfo.stageCurrent >= 100).all()]))
+    if (handlerInfo.id == 0):
+        list(reversed([j.json() for j in LTCInfo.query.filter(
+            LTCInfo.userId == handlerInfo.id and LTCInfo.stageCurrent >= 100).all()]))
     return list(reversed([j.json() for j in LTCInfo.query.filter(LTCInfo.stageCurrent >= 100).all()]))
-
 
 
 @router.route('/listTAOfficeOrders', methods=['POST'])
 def listTAOfficeOrder():
     handlerInfo = session.get('userInfo')
-    if(handlerInfo.id ==0): 
-        list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.userId == handlerInfo.id and TAInfo.stageCurrent >= 100).all()]))
+    if (handlerInfo.id == 0):
+        list(reversed([j.json() for j in TAInfo.query.filter(
+            TAInfo.userId == handlerInfo.id and TAInfo.stageCurrent >= 100).all()]))
     return list(reversed([j.json() for j in TAInfo.query.filter(TAInfo.stageCurrent >= 100).all()]))
+
+
+@router.route('/getComments', methods=['POST'])
+def getComments():
+    ltcFormId = request.json.get('id')
+    # print('ltcId', ltcId)
+    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
+    ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
+
+    return [comment.json() for comment in ltcInfo.comments]
+    # return {}
+
+
+@router.route('/getTAComments', methods=['POST'])
+def getTAComments():
+    taFormId = request.json.get('id')
+    # print('ltcId', ltcId)
+    # ltcInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
+    taInfo: TAInfo = TAInfo.query.filter_by(id=taFormId).first()
+
+    return [comment.json() for comment in taInfo.comments]
+    # return {}
