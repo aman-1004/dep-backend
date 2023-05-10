@@ -151,7 +151,7 @@ class LTCInfo(db.Model):
     registrarDate: Mapped[datetime]= mapped_column(nullable=True)
     deanDate: Mapped[datetime]= mapped_column(nullable=True)
     peopleInvolved: Mapped[List["PersonInvolvedLTC"]] = relationship(backref='ltc_infos', cascade="all, delete-orphan")
-    comments: Mapped[List["Comment"]] = relationship(backref="ltc_infos")
+    comments: Mapped[List["Comment"]] = relationship(backref="ltc_infos", cascade='all, delete-orphan')
     receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
     lastForwardDate: Mapped[datetime]= mapped_column(nullable=True)
 
@@ -200,6 +200,7 @@ class LTCInfo(db.Model):
         self.fillDate = datetime.now()
         self.stageRedirect = None
         self.stageCurrent = 1
+        self.lastForwardDate = datetime.now()
 
     def __repr__(self):
         return "LTCInfo(id=%s, )" % (
@@ -247,7 +248,7 @@ class Comment(db.Model):
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     
     def __repr__(self):
-        return f"Comment('{self.comment}' set by stage-{self.stage} user)"
+        return f"Comment('{self.comment}' set by {self.handler.designation})"
 
     def json(self):
         return {
@@ -269,7 +270,7 @@ class TAInfo(db.Model):
     ltcId: Mapped[int] = mapped_column(ForeignKey('ltc_infos.id'))
     ltcInfo: Mapped["LTCInfo"] = relationship(backref="taInfo")
     journeyDetails: Mapped[List["JourneyDetail"]] = relationship(backref="taInfo", cascade="all, delete-orphan") 
-    comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos")
+    comments: Mapped[List["CommentTA"]] = relationship(backref="ta_infos", cascade='all, delete-orphan')
     stageRedirect: Mapped[int] = mapped_column(nullable=True)
     stageCurrent: Mapped[int]
     fillDate: Mapped[Optional[datetime]]
@@ -355,7 +356,7 @@ class CommentTA(db.Model):
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     
     def __repr__(self):
-        return f"Comment('{self.comment}' set by stage-{self.stage} user)"
+        return f"Comment('{self.comment}' set by {self.handler.designation})"
 
     def json(self):
         return {

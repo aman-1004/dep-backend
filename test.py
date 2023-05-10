@@ -5,6 +5,8 @@ from tests.testRole import role1
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 import json
+from datetime import datetime
+
 # from functions import listLiveApplications
 
 from app import app
@@ -14,19 +16,10 @@ from app import app
 
 def main():
     with app.app_context():
-        print([i.json() for i in TAInfo.query.all()])
+        a = [j for j in LTCInfo.query.all()]
+        f = filter(lambda j: (datetime.now() - j.lastForwardDate).days > 3, a)
+        print([x.stageCurrent for x  in f])
 
-def deleteLtcForms():
-    for ltc in LTCInfo.query.all():
-        print(db.session.delete(ltc))
-    db.session.commit()
-
-    print([ltc.json() for ltc in LTCInfo.query.all()])
-
-def deleteComment():
-    db.session.delete(Comment.query.filter(Comment.id==1).first())
-    db.session.commit()
 
 with app.app_context():
-    db.create_all()
     main()

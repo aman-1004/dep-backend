@@ -40,6 +40,7 @@ def submitHodData():
     ltcFormId: int = request.json.get('formId')
     print([comment, status, ltcFormId])
     ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
+    ltcInfo.lastForwardDate = datetime.now()
     addCommentLTCForm(comment, ltcInfo, handlerId=handlerInfo.id)
     if(status == 'ACCEPT'):
         ltcInfo.stageCurrent = handlerInfo.role.nextStage
