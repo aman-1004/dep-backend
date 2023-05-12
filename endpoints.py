@@ -33,7 +33,7 @@ def createNewTAAApplicationHandle():
     journeyDetails = json_data.get('journeyDetails')
     userInfo = session.get('userInfo')
     ltcId = json_data.get('ltcId')
-    LTCInfo.query.filter(LTCInfo.id == ltcId).first().role.stageCurrent = 101
+    LTCInfo.query.filter(LTCInfo.id == ltcId).first().stageCurrent = 101
     taInfo = TAInfo(userId=userInfo.id,
                     ltcId=ltcId,
                     journeyDetails=journeyDetails)
