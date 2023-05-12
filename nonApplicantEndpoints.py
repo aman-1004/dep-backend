@@ -1,6 +1,6 @@
 from flask import request, session, Blueprint
 from functions import createNewLTCApplication
-from models import LTCInfo, Comment, User, db, TAInfo, Notification, CommentTA
+from models import LTCInfo, Comment, User, db, TAInfo, Notification, CommentTA, ExpectedJourneyDetail
 from datetime import datetime
 
 router = Blueprint("nonApplicantEndpoints", __name__)
@@ -10,8 +10,13 @@ def isApplicant(stageCurrent):
     return stageCurrent == 0
 
 
-def getPendingByStage(stageCurrent):
-    ltcInfos = LTCInfo.query.filter_by(stageCurrent=stageCurrent).all()
+def getPendingByStage():
+    handlerInfo = session.get('userInfo')
+    stageCurrent = handlerInfo.role.stageCurrent
+    ltcInfos = LTCInfo.query.filter(LTCInfo.stageCurrent == stageCurrent).all()
+
+    if(stageCurrent == 1):
+        return [ltc.json() for ltc in ltcInfos if ltc.user.department == handlerInfo.department]
     return [ltc.json() for ltc in ltcInfos]
 
 
@@ -23,8 +28,7 @@ def before():
 
 @router.route('/listPendingLTCApplication', methods=['POST'])
 def listPendingLTCApplication():
-    handlerInfo = session.get('userInfo')
-    return getPendingByStage(handlerInfo.role.stageCurrent)
+    return getPendingByStage()
 
 
 def addCommentLTCForm(comment: str, ltcInfo: LTCInfo, handlerId):
@@ -53,6 +57,7 @@ def submitHodData():
 
     print(message)
     applicantInfo = ltcInfo.user.notifications.append(Notification(message))
+    
     # print([comment.json() for comment in ltcInfo.comments])
     # # print(ltcInfo.json())
     db.session.commit()
@@ -69,6 +74,12 @@ def submitEstabData():
 
 @router.route('/submitAccountsData', methods=['POST'])
 def submitAccountsData():
+    fares = request.json.get('fares')
+    ltcFormId: int = request.json.get('formId')
+    ltcInfo: LTCInfo = LTCInfo.query.filter_by(id=ltcFormId).first()
+    ltcInfo.expectedJourneyDetails.clear()
+    for fare in fares:
+        ltcInfo.expectedJourneyDetails.append(ExpectedJourneyDetail(fare))
     return submitHodData()
 
 

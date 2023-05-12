@@ -81,6 +81,15 @@ def getLTCInfo():
     # return ltcInfo.json(), 200
     return {}, 400
 
+@router.route('/getOldLTCInfo', methods=['POST'])
+def getOldLTCInfo():
+    ltcId = request.json.get('ltcId')
+    ltcInfo: LTCInfo = LTCInfo.query.filter(LTCInfo.id==ltcId).first()
+    if (ltcInfo):
+        ltcs = LTCInfo.query.filter(LTCInfo.userId == ltcInfo.userId).all()
+        if(len(ltcs) > 1): return ltcs[-2].json(), 200
+    # return ltcInfo.json(), 200
+    return {}, 400
 
 @router.route('/listLiveTAApplications', methods=['POST'])
 def listLiveTAApplicationsHandle():

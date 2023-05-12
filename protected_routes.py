@@ -3,6 +3,7 @@ from flask import request, session, Blueprint, Response
 router = Blueprint("protected-router", __name__)
 
 
+
 @router.before_request
 def before():
     if (session.get('userInfo', None) is None):
@@ -18,7 +19,7 @@ def inf():
     return "You are logged in"
 
 
-@router.route('/logout')
+@router.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return "Logout successful", 200

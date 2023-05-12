@@ -42,7 +42,7 @@ def home():
 
 class UserView(ModelView):
     column_list = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'roleId', 'role', 'dateOfJoining', 'department', 'ltcInfos', 'signUrl')
-    form_columns = ('id', 'firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'role', 'dateOfJoining', 'department', 'ltcInfos', 'signUrl')
+    form_columns = ('firstName', 'lastName', 'emailId', 'hometown', 'designation', 'payLevel', 'role', 'dateOfJoining', 'department', 'ltcInfos', 'signUrl')
     form_overrides = {
         'signUrl': ImageUploadField
     }

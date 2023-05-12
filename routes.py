@@ -8,6 +8,7 @@ import random
 from protected_routes import router as protected_router
 # from checkEmail import check
 from functions import checkEmail
+import threading
 from helper import randomGen, sendOTP
 
 router = Blueprint("router", __name__)
@@ -23,6 +24,7 @@ def info():
 
 @router.route("/login", methods=["POST"])
 def login():
+    print(session)
     print(request.form)
     if(request.is_json):
         emailId = json.loads(request.data).get('emailId')
@@ -34,9 +36,10 @@ def login():
         if (userInfo):
             otp = randomGen(4)
             session['otp'] = otp
-            session['emailId'] = emailId
+            session['_email'] = emailId
             print(f'{otp} sent to {emailId}')
-            sendOTP(emailId, otp)
+            # sendOTP(emailId, otp)
+            threading.Thread(target=sendOTP, args=(emailId, otp)).start()
             # session['userInfo'] = userInfo
             return "200", 200
         return "User not found", 401
@@ -46,17 +49,17 @@ def login():
 
 @router.route('/acceptOTP', methods=['POST'])
 def acceptOTP():
-    emailId = session.get('emailId', None)
+    print(session)
+    emailId = session.get('_email', None)
     otp = request.form.get('otp', None)
     if(emailId and otp):
         userInfo = checkEmail(emailId)
         otp_ = session['otp']
-        session['otp'] = None
-        session['emailId'] = None
-        session['userInfo'] = userInfo
         uf = getUserInfo()
         print('uf: ', uf)
-        if(otp_==otp): return getUserInfo() 
+        if(otp_==otp): 
+            session['userInfo'] = userInfo
+            return getUserInfo() 
         return "Incorrect OTP", 401
     return "OTP not received", 401
 
@@ -88,12 +91,6 @@ def getSignImage():
     base_path = os.path.join(os.path.dirname(__file__), 'uploads')
     filePath = f"{base_path}/{fileName}"
     return send_file(filePath) 
-
-
-@protected_router.route('/logout', methods=['POST'])
-def logOut():
-    session.pop('userInfo')
-    return "", 200
 
 
 @router.route('/uploadReceipt', methods=["POST"])

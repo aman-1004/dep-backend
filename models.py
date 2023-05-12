@@ -154,6 +154,7 @@ class LTCInfo(db.Model):
     comments: Mapped[List["Comment"]] = relationship(backref="ltc_infos", cascade='all, delete-orphan')
     receipts: Mapped[List["Receipt"]] = relationship(cascade="all, delete-orphan") 
     lastForwardDate: Mapped[datetime]= mapped_column(nullable=True)
+    expectedJourneyDetails: Mapped[List["ExpectedJourneyDetail"]] = relationship(cascade="all, delete-orphan")
 
     def __init__(self, json):
         peopleInvolvedinLTC = json.get('peopleInvolved', [])
@@ -236,6 +237,7 @@ class LTCInfo(db.Model):
                 "deanDate": self.deanDate,
                 "peopleInvolved": [person.json() for person in self.peopleInvolved],
                 "lastForwardDate": self.lastForwardDate,
+                "expectedJourneyDetails": [det.json() for det in self.expectedJourneyDetails]
                 }
 
 class Comment(db.Model):
@@ -345,6 +347,31 @@ class JourneyDetail(db.Model):
     #   totalFare:400,
     #   ticketNo:50,
     # }],
+
+class ExpectedJourneyDetail(db.Model):
+    __tablename__ = "expected_journey_details"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ltcId: Mapped[int] = mapped_column(ForeignKey('ltc_infos.id'))
+    departureFrom: Mapped[str]
+    arrivalTo: Mapped[str]
+    modeOfTravel: Mapped[str]
+    noOfFares: Mapped[int]
+    singleFare: Mapped[int]
+
+    def __init__(self, json):
+        print("adding", json, "expected journey detail -- from models.py Line361")
+        super().__init__(**json)
+
+    def json(self):
+        return {
+                "id": self.id,
+                "departureFrom": self.departureFrom,
+                "arrivalTo": self.arrivalTo,
+                "modeOfTravel": self.modeOfTravel,
+                "noOfFares": self.noOfFares,
+                "singleFare": self.singleFare,
+                }
+
 
 class CommentTA(db.Model):
     __tablename__ = "ta_comments"
