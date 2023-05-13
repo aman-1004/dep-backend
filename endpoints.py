@@ -156,3 +156,14 @@ def getTAComments():
 
     return [comment.json() for comment in taInfo.comments]
     # return {}
+
+
+@router.route('/getReceipt', methods=['POST'])
+def getReceipt():
+    fileId = request.json.get('fileId')
+    if(fileId):
+        receipt = Receipt.query.filter(Receipt.id == fileId).first()
+        if(receipt):
+            print(receipt.filePath)
+    
+    return "200"

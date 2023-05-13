@@ -10,11 +10,23 @@ from protected_routes import router as protected_router
 from functions import checkEmail
 import threading
 from helper import randomGen, sendOTP
+from models import Receipt
 
 router = Blueprint("router", __name__)
 # router.register_blueprint(protected_router, url_prefix='/auth')
 router.register_blueprint(protected_router)
 
+@router.route('/getReceipt', methods=['POST'])
+def getReceipt():
+    fileId = request.form.get('fileId')
+    print(fileId)
+    if(fileId):
+        receipt = Receipt.query.filter(Receipt.id == fileId).first()
+        print(receipt)
+        if(receipt):
+            path = receipt.filePath
+            return send_file(path, as_attachment=True)
+    return "200"
 
 
 @router.route("/info", methods=["GET"])

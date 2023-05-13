@@ -237,7 +237,8 @@ class LTCInfo(db.Model):
                 "deanDate": self.deanDate,
                 "peopleInvolved": [person.json() for person in self.peopleInvolved],
                 "lastForwardDate": self.lastForwardDate,
-                "expectedJourneyDetails": [det.json() for det in self.expectedJourneyDetails]
+                "expectedJourneyDetails": [det.json() for det in self.expectedJourneyDetails],
+                "receipts": [r.id for r in self.receipts],
                 }
 
 class Comment(db.Model):
@@ -299,6 +300,7 @@ class TAInfo(db.Model):
                 "fillDate": self.fillDate,
                 "stageCurrent": self.stageCurrent,
                 "lastForwardDate": self.lastForwardDate,
+                "receipts": [r.id for r in self.receipts],
                 }
 
 class JourneyDetail(db.Model):
