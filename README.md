@@ -1,4 +1,5 @@
 This project has been tested on Arch Linux and Windows 11.
+
 Setup Backend:
 
 Optionally create new virtual environment by using `python3 -m pip venv .venv && source .venv/bin/activate`
