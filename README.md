@@ -15,6 +15,7 @@ REMINDER_URL='[URL OBTAINED FOR T2]'
 7. `python3 app.py`
 
 Setup Frontend:
+
 8. `git clone git@github.com:aman-1004/dep-frontend.git`
 9. `cd dep-frontend`
 10. `npm install`
