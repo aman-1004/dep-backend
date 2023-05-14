@@ -1,5 +1,6 @@
 This project has been tested on Arch Linux and Windows 11.
 Setup Backend:
+
 Optionally create new virtual environment by using `python3 -m pip venv .venv && source .venv/bin/activate`
 
 1. Go to script.google.com and create a new script and copy content from `app-scripts/otp.gs` and deploy the script. Copy the url of deployed function.
