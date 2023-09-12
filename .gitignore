@@ -4,3 +4,4 @@ __pycache__/
 *.tmp.a
 todo.txt
 env.py
+tags

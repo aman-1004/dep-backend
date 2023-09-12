@@ -3,6 +3,7 @@ from flask import request
 import uuid, mimetypes, json, os
 from helper import remindStakeholder
 from datetime import datetime
+
 def checkEmail(emailId):
     foundUser = User.query.filter(User.emailId == emailId).first()
     return foundUser

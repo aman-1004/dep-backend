@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_session import Session
+from flask_cors import CORS
 import sys
 import collections
 from routes import router
@@ -21,6 +22,7 @@ else:
     from collections import MutableSet
 
 app = Flask(__name__)
+cors = CORS(app, resources={"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
