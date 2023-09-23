@@ -24,4 +24,3 @@ def remindStakeholder(json):
     response = requests.post(url, data=json)
     print(response.content)
     response.raise_for_status()
-    

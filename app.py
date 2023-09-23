@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_session import Session
 from flask_cors import CORS
 import sys
@@ -21,7 +21,7 @@ if sys.version_info.major == 3 and sys.version_info.minor >= 10:
 else:
     from collections import MutableSet
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="", static_folder="static/")
 cors = CORS(app, resources={"/*": {"origins": "*"}})
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -34,8 +34,12 @@ scheduler.start()
 
 
 migrate = Migrate(app, db)
-app.register_blueprint(router)
+app.register_blueprint(router, url_prefix="/api")
 admin = Admin(app)
+
+@app.route("/")
+def fronend():
+    return send_from_directory("static", "index.html")
 
 @app.route("/home")
 def home():
